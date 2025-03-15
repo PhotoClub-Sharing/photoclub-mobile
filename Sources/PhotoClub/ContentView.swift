@@ -1,5 +1,5 @@
 import SwiftUI
-
+import UIKit
 
 public struct ContentView: View {
     @State var appearance = ""
@@ -8,10 +8,12 @@ public struct ContentView: View {
     }
 
     public var body: some View {
-        VStack {
+        VStack(spacing: 40) {
             Image("logo")
                 .resizable()
                 .scaledToFit()
+                .frame(maxHeight: .infinity, alignment: .center)
+            
             VStack {
                 HStack {
                     Button("Apple") {}
@@ -21,10 +23,16 @@ public struct ContentView: View {
                 }
                 
                 Button("Continue as Guest") {}
-                    .foregroundStyle(.white)
             }
+            .frame(maxWidth: .infinity, minHeight: 200, maxHeight: .infinity)
+            .background(
+                UnevenRoundedRectangle(topLeadingRadius: 25, topTrailingRadius: 25)
+                    .fill(Color.white)
+            )
         }
+        .tint(Color.accentColor)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .ignoresSafeArea(edges: .bottom)
         .background(Color.logoBackground.ignoresSafeArea())
     }
 }

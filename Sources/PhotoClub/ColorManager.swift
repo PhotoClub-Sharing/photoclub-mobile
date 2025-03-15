@@ -27,4 +27,7 @@ extension Color {
     static var logoBackground: Self {
         Color(#colorLiteral(red: 1, green: 0.738301754, blue: 0.3153707385, alpha: 1))
     }
+    static var accentColor: Self {
+        Color(#colorLiteral(red: 0.9803921569, green: 0.4509803922, blue: 0.2588235294, alpha: 1))
+    }
 }
