@@ -74,9 +74,9 @@ final class AlbumManager: ObservableObject {
         let firebasePhotos = try await firebaseAlbum.collection("Images").getDocuments()
         
         let photos: [Photo] = firebasePhotos.documents.compactMap { snapshot in
-            guard let urlString = snapshot.get("url") as? String, let url = URL(string: urlString), let date = snapshot.get("createdAt") as? Date else { return nil }
+            guard let urlString = snapshot.get("url") as? String, let url = URL(string: urlString), let date = snapshot.get("createdAt") as? Timestamp else { return nil }
             
-            return Photo(id: snapshot.documentID, url: url, createdAt: date)
+            return Photo(id: snapshot.documentID, url: url, createdAt: date.dateValue())
         }
         return photos
     }
