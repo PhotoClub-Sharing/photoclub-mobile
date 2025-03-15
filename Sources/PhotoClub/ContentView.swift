@@ -18,8 +18,16 @@ public struct ContentView: View {
                     Button {
                         
                     } label: {
-                        Label("Continue with Apple", systemImage: "applelogo")
+                        Label {
+                            Text("Continue with Apple")
+                        } icon: {
+                            Image("Apple_logo_black", bundle: .module)
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(height: 25)
+                        }
                     }
+                    .foregroundStyle(Color.accentColor)
                         .buttonStyle(.borderedProminent)
                     Button("Continue with Google") {}
                         .buttonStyle(.borderedProminent)
@@ -32,7 +40,7 @@ public struct ContentView: View {
                     .fill(Color.white)
             )
         }
-//        .tint(Color.accentColor)
+        .tint(Color.accentColor)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .ignoresSafeArea(edges: .bottom)
         .background(Color.logoBackground.ignoresSafeArea())

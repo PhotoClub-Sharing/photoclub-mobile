@@ -36,6 +36,9 @@
     "Continue with Apple" : {
 
     },
+    "Continue with Google" : {
+
+    },
     "Dark" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -64,9 +67,6 @@
           }
         }
       }
-    },
-    "Google" : {
-
     },
     "Hello [%@](https://skip.tools)!" : {
       "extractionState" : "stale",
