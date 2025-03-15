@@ -80,4 +80,12 @@ final class AlbumManager: ObservableObject {
         }
         return photos
     }
+    
+    func createAlbum(withName name: String) async throws {
+        
+    }
+    
+    func addPhoto(toAlbum: Album, image: UIImage) async throws {
+        
+    }
 }
