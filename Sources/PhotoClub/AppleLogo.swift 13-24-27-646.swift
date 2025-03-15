@@ -86,27 +86,29 @@ struct AppleLogo: View {
 
     var body: some View {
       PathShape1()
-            .fill(.primary)
+            .fill(.white)
     }
   }
 
   var isResizable = false
   func resizable() -> Self { Self(isResizable: true) }
+    let height: CGFloat = 1000
+    let width: CGFloat = 1000
 
   var body: some View {
     if isResizable {
       GeometryReader { proxy in
         PathView1()
-          .frame(width: 814, height: 1000,
+          .frame(width: width, height: height,
                  alignment: .topLeading)
-          .scaleEffect(x: proxy.size.width  / 814,
-                       y: proxy.size.height / 1000)
+          .scaleEffect(x: proxy.size.width  / width,
+                       y: proxy.size.height / height)
           .frame(width: proxy.size.width, height: proxy.size.height)
       }
     }
     else {
       PathView1()
-        .frame(width: 814, height: 1000)
+        .frame(width: width, height: height)
     }
   }
 }

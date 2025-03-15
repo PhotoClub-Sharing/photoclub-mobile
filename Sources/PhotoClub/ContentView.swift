@@ -15,33 +15,49 @@ public struct ContentView: View {
                 .frame(maxHeight: .infinity, alignment: .center)
             
             VStack {
-                    Button {
-                        
-                    } label: {
-                        Label {
-                            Text("Continue with Apple")
-                        } icon: {
-                            AppleLogo()
-//                            Image("Apple_logo_black", bundle: .module)
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(width: 20, height: 25)
-                        }
+                Button {
+                    
+                } label: {
+                    Label {
+                        Text("Continue with Apple")
+                    } icon: {
+                        AppleLogo()
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 25, height: 25)
                     }
-                    .buttonStyle(.borderedProminent)
-//                    .foregroundStyle(Color.accentColor)
-                    Button("Continue with Google") {}
-                        .buttonStyle(.borderedProminent)
+                    .frame(maxWidth: .infinity)
+                }
+                .tint(Color.actionColor)
+                .buttonStyle(.borderedProminent)
+                Button {
+                    
+                } label: {
+                    Label {
+                        Text("Continue with Google")
+                    } icon: {
+                        GoogleLogo()
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 25, height: 25)
+                    }
+                    .frame(maxWidth: .infinity)
+                }
+                .tint(Color.actionColor)
+                .buttonStyle(.borderedProminent)
                 
-                Button("Continue as Guest") {}
+                Button("Continue as Guest") {
+                    
+                }
+                    .foregroundStyle(Color.primary)
             }
+            .padding(.horizontal, 30)
             .frame(maxWidth: .infinity, minHeight: 200, maxHeight: .infinity)
             .background(
                 UnevenRoundedRectangle(topLeadingRadius: 25, topTrailingRadius: 25)
                     .fill(Color.white)
             )
         }
-//        .tint(Color.accentColor)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .ignoresSafeArea(edges: .bottom)
         .background(Color.logoBackground.ignoresSafeArea())
