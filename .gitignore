@@ -64,3 +64,4 @@ fastlane/test_output
 # Skip
 ./build
 .DS_Store
+/Android/.gradle
