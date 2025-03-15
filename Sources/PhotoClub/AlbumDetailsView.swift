@@ -1,7 +1,7 @@
 import SwiftUI
 import SkipKit
 
-struct ListView: View {
+struct AlbumDetailsView: View {
 //    @State private var selectedItems: [PhotosPickerItem] = [] // Array to store selected images
     @State private var selectedImages: [UIImage] = [] // Array to store final selected images
     @State private var isShowingPhotoPicker = false
@@ -80,5 +80,5 @@ struct ListView: View {
 }
 
 #Preview {
-    ListView()
+    AlbumDetailsView()
 }
