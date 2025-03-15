@@ -10,12 +10,20 @@ public struct ContentView: View {
     public var body: some View {
         VStack {
             Image("logo")
+                .resizable()
+                .scaledToFit()
             VStack {
-                Button("Apple") {}
-                Button("Google") {}
+                HStack {
+                    Button("Apple") {}
+                        .buttonStyle(.borderedProminent)
+                    Button("Google") {}
+                        .buttonStyle(.borderedProminent)
+                }
                 
                 Button("Continue as Guest") {}
+                    .foregroundStyle(.white)
             }
         }
+        .background(Color("LogoBackground"))
     }
 }
