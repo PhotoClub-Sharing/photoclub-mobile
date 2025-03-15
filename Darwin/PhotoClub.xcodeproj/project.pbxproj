@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		221DF2742D86043B00E4940B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 221DF2732D86043B00E4940B /* GoogleService-Info.plist */; };
 		49231BAC2AC5BCEF00F98ADF /* PhotoClubApp in Frameworks */ = {isa = PBXBuildFile; productRef = 49231BAB2AC5BCEF00F98ADF /* PhotoClubApp */; };
 		49231BAD2AC5BCEF00F98ADF /* PhotoClubApp in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 49231BAB2AC5BCEF00F98ADF /* PhotoClubApp */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		496BDBEE2B8A7E9C00C09264 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 496BDBED2B8A7E9C00C09264 /* Localizable.xcstrings */; };
@@ -29,6 +30,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		221DF2732D86043B00E4940B /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		4900101C2BACEA710000DE33 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		493609562A6B7EAE00C401E2 /* PhotoClub */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = PhotoClub; path = ..; sourceTree = "<group>"; };
 		496BDBEB2B89A47800C09264 /* PhotoClub.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PhotoClub.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -54,6 +56,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		221DF2722D86042E00E4940B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		496BDBEC2B89A47800C09264 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -80,6 +89,7 @@
 				493609562A6B7EAE00C401E2 /* PhotoClub */,
 				49F90C2A2A52156200F06D93 /* App */,
 				49AB54462B066A7E007B79B2 /* SkipStone */,
+				221DF2722D86042E00E4940B /* Frameworks */,
 				496BDBEC2B89A47800C09264 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -89,6 +99,7 @@
 			children = (
 				49F90C2B2A52156200F06D93 /* PhotoClubAppMain.swift */,
 				49F90C2F2A52156300F06D93 /* Assets.xcassets */,
+				221DF2732D86043B00E4940B /* GoogleService-Info.plist */,
 				49F90C312A52156300F06D93 /* Entitlements.plist */,
 				4900101C2BACEA710000DE33 /* Info.plist */,
 			);
@@ -160,6 +171,7 @@
 			files = (
 				499CD4402AC5B799001AE8D8 /* Assets.xcassets in Resources */,
 				496BDBEE2B8A7E9C00C09264 /* Localizable.xcstrings in Resources */,
+				221DF2742D86043B00E4940B /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

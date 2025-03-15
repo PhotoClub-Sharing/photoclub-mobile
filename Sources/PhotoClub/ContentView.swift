@@ -24,6 +24,7 @@ public struct ContentView: View {
                     .foregroundStyle(.white)
             }
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color("LogoBackground"))
     }
 }
