@@ -1,9 +1,12 @@
 import SwiftUI
-import PhotosUI
+import SkipKit
 
 struct ListView: View {
-    @State private var selectedItems: [PhotosPickerItem] = [] // Array to store selected images
+//    @State private var selectedItems: [PhotosPickerItem] = [] // Array to store selected images
     @State private var selectedImages: [UIImage] = [] // Array to store final selected images
+    @State private var isShowingPhotoPicker = false
+    @State private var selectedImageURL: URL?
+    
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -43,43 +46,36 @@ struct ListView: View {
                 .padding()
 
                 // Button to add image
-                PhotosPicker(selection: $selectedItems, matching: .images, photoLibrary: .shared()) {
-                    HStack {
-                        Image(systemName: "plus.circle.fill") // Plus icon for the button
-                            .font(.title)
-                            .foregroundColor(.white)
-                        
-                        Text("Add Photo")
-                            .font(.title3)
-                            .foregroundColor(.white)
-                    }
-                    .padding(10)
-                    .frame(maxWidth: .infinity)
-                    .background(Color.black)
-                    .cornerRadius(10)
-                    .shadow(radius: 5)
-                 
+                Button("Add Photos") {
+                    isShowingPhotoPicker = true
                 }
-                
-                
-                .onChange(of: selectedItems) { newItems in
-                    // Load the selected images
-                    Task {
-                        for item in newItems {
-                            // Retrieve selected image
-                            if let data = try? await item.loadTransferable(type: Data.self),
-                               let uiImage = UIImage(data: data) {
-                                selectedImages.append(uiImage)
-                            }
-                        }
-                    }
-                }
+                .frame(maxWidth: .infinity)
+                .tint(Color.actionColor)
+                .buttonStyle(.borderedProminent)
                 
                 
             }
         }
         .background(Color.logoBackground.ignoresSafeArea())
-        .padding(.top, -30) // Removed extra padding at the top of the screen
+//        .padding(.top, -30)  // Removed extra padding at the top of the screen
+        .withMediaPicker(type: .library, isPresented: $isShowingPhotoPicker, selectedImageURL: $selectedImageURL)
+    
+        .onChange(of: selectedImageURL) { _, newValue in
+            guard let newValue else { return }
+            
+            do {
+                defer {
+                    self.selectedImageURL = nil
+                }
+                let data = try Data(contentsOf: newValue)
+                guard let image = UIImage(data: data) else {
+                    return
+                }
+                selectedImages.append(image)
+            } catch {
+                print(error)
+            }
+        }
     }
 }
 

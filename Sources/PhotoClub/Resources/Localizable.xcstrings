@@ -1,6 +1,12 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "Add Photos" : {
+
+    },
+    "Album" : {
+
+    },
     "Appearance" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -155,7 +161,7 @@
         }
       }
     },
-    "List Item %lld" : {
+    "LOREM!" : {
 
     },
     "Name" : {
@@ -186,9 +192,6 @@
           }
         }
       }
-    },
-    "Photos" : {
-
     },
     "Powered by Skip and %@" : {
       "extractionState" : "stale",
@@ -247,9 +250,6 @@
           }
         }
       }
-    },
-    "Subtitle goes here" : {
-
     },
     "System" : {
       "extractionState" : "stale",
