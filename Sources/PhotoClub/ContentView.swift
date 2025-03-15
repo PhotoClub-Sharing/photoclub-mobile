@@ -25,6 +25,6 @@ public struct ContentView: View {
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color.logoBackground)
+        .background(Color.logoBackground.ignoresSafeArea())
     }
 }
