@@ -9,7 +9,7 @@ public struct ContentView: View {
 
     public var body: some View {
         VStack(spacing: 40) {
-            Image("logo")
+            Image("logo", bundle: .module)
                 .resizable()
                 .scaledToFit()
                 .frame(maxHeight: .infinity, alignment: .center)
@@ -21,14 +21,15 @@ public struct ContentView: View {
                         Label {
                             Text("Continue with Apple")
                         } icon: {
-                            Image("Apple_logo_black", bundle: .module)
+                            AppleLogo()
+//                            Image("Apple_logo_black", bundle: .module)
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
-                                .frame(height: 25)
+                                .frame(width: 20, height: 25)
                         }
                     }
-                    .foregroundStyle(Color.accentColor)
-                        .buttonStyle(.borderedProminent)
+                    .buttonStyle(.borderedProminent)
+//                    .foregroundStyle(Color.accentColor)
                     Button("Continue with Google") {}
                         .buttonStyle(.borderedProminent)
                 
@@ -40,7 +41,7 @@ public struct ContentView: View {
                     .fill(Color.white)
             )
         }
-        .tint(Color.accentColor)
+//        .tint(Color.accentColor)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .ignoresSafeArea(edges: .bottom)
         .background(Color.logoBackground.ignoresSafeArea())
