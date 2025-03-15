@@ -29,13 +29,12 @@ struct Album: Identifiable, Codable {
 
 final class AlbumManager: ObservableObject {
     private let db = Firestore.firestore()
-    @AppStorage("albumCodesData") var _albumCodes: Data?
     private var albumCodes: [String] {
         get {
-            (try? JSONDecoder().decode(Array<String>.self, from: _albumCodes ?? Data())) ?? []
+            (UserDefaults.standard.string(forKey: "albumCodesData") ?? "").components(separatedBy: ",")
         }
         set {
-            _albumCodes = try? JSONEncoder().encode(newValue)
+            UserDefaults.standard.set(newValue.joined(separator: ","), forKey: "albumCodesData")
         }
     }
     @Published private(set) var albums: [Album] = []
