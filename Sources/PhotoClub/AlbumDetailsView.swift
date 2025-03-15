@@ -54,13 +54,11 @@ struct AlbumDetailsView: View {
                 .frame(maxWidth: .infinity)
                 .tint(Color.actionColor)
                 .buttonStyle(.borderedProminent)
-                
-                
             }
         }
         .background(Color.logoBackground.ignoresSafeArea())
 //        .padding(.top, -30)  // Removed extra padding at the top of the screen
-        .withMediaPicker(type: .library, isPresented: $isShowingPhotoPicker, selectedImageURL: $selectedImageURL)
+        .withMediaPicker(type: .library, isPresented: $isShowingPhotoPicker, selectedImageURL: $selectedImageURL, detents: [.large])
     
         .onChange(of: selectedImageURL) { _, newValue in
             guard let newValue else { return }
