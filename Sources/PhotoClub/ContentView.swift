@@ -15,12 +15,14 @@ public struct ContentView: View {
                 .frame(maxHeight: .infinity, alignment: .center)
             
             VStack {
-                HStack {
-                    Button("Apple") {}
+                    Button {
+                        
+                    } label: {
+                        Label("Continue with Apple", systemImage: "applelogo")
+                    }
                         .buttonStyle(.borderedProminent)
-                    Button("Google") {}
+                    Button("Continue with Google") {}
                         .buttonStyle(.borderedProminent)
-                }
                 
                 Button("Continue as Guest") {}
             }
@@ -30,7 +32,7 @@ public struct ContentView: View {
                     .fill(Color.white)
             )
         }
-        .tint(Color.accentColor)
+//        .tint(Color.accentColor)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .ignoresSafeArea(edges: .bottom)
         .background(Color.logoBackground.ignoresSafeArea())
