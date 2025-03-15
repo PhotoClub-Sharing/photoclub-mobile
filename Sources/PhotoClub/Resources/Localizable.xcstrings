@@ -155,6 +155,9 @@
         }
       }
     },
+    "List Item %lld" : {
+
+    },
     "Name" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -183,6 +186,9 @@
           }
         }
       }
+    },
+    "Photos" : {
+
     },
     "Powered by Skip and %@" : {
       "extractionState" : "stale",
@@ -241,6 +247,9 @@
           }
         }
       }
+    },
+    "Subtitle goes here" : {
+
     },
     "System" : {
       "extractionState" : "stale",
