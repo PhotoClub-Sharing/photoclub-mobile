@@ -29,13 +29,36 @@ struct Album: Identifiable, Codable {
 
 final class AlbumManager: ObservableObject {
     private let db = Firestore.firestore()
-    @AppStorage("albumCodesData") var _albumCodes: Data?
+//    @AppStorage("albumCodesData") var _albumCodes: String?
     private var albumCodes: [String] {
         get {
-            (try? JSONDecoder().decode(Array<String>.self, from: _albumCodes ?? Data())) ?? []
+            do {
+                guard let directoryURL = Bundle.main.resourceURL,
+                let fileURL = URL(string: "\(directoryURL.absoluteString)/albumCodes.json")//.appending(path: "albumCodes.json")
+                else {
+                    return [String]()
+                }
+                
+                let data = try Data(contentsOf: fileURL)
+                let array = try JSONDecoder().decode([String].self, from: data)
+                return array
+            } catch {
+                print(error)
+                return [String]()
+            }
         }
         set {
-            _albumCodes = try? JSONEncoder().encode(newValue)
+            do {
+                guard let directoryURL = Bundle.main.resourceURL,
+                let fileURL = URL(string: "\(directoryURL.absoluteString)/albumCodes.json")
+                else {
+                    return
+                }
+                let data = try JSONEncoder().encode(newValue)
+                try data.write(to: fileURL)
+            } catch {
+                print(error)
+            }
         }
     }
     @Published private(set) var albums: [Album] = []
