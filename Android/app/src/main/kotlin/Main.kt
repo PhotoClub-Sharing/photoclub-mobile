@@ -1,5 +1,6 @@
 package photo.club
 
+import skip.firebase.core.FirebaseApp
 import skip.lib.*
 import skip.model.*
 import skip.foundation.*
@@ -31,6 +32,8 @@ open class AndroidAppMain: Application {
         super.onCreate()
         logger.info("starting app")
         ProcessInfo.launch(applicationContext)
+        
+        FirebaseApp.configure()
     }
 
     companion object {
