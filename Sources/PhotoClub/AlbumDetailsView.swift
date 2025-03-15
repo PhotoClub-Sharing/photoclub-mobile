@@ -6,6 +6,7 @@ struct AlbumDetailsView: View {
     @EnvironmentObject var albumManager: AlbumManager
 //    @State private var selectedItems: [PhotosPickerItem] = [] // Array to store selected images
     @State private var selectedImages: [UIImage] = [] // Array to store final selected images
+    @State private var photos: [Photo] = [] // Array to store final selected images
     @State private var isShowingPhotoPicker = false
     @State private var selectedImageURL: URL?
     
@@ -36,13 +37,18 @@ struct AlbumDetailsView: View {
             ScrollView {
                 VStack(spacing: 16) {
                     // Show selected images
-                    ForEach(selectedImages, id: \.self) { image in
-                        Image(uiImage: image) // Display selected image
-                            .resizable()
-                            .scaledToFill()
-                            .frame(height: 150)
-                            .clipped()
-                            .cornerRadius(10)
+                    ForEach(photos, id: \.self) { photo in
+                        AsyncImage(url: photo.url) { image in
+                            image
+                                .resizable()
+                                .scaledToFill()
+                                .frame(height: 150)
+                                .clipped()
+                                .cornerRadius(10)
+                        } placeholder: {
+                            ProgressView()
+                        }
+
                     }
                 }
                 .padding()

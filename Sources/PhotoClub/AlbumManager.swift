@@ -13,7 +13,7 @@ import SkipFirebaseFirestore
 import FirebaseFirestore
 #endif
 
-struct Photo: Identifiable, Codable {
+struct Photo: Identifiable, Codable, Hashable {
     let id: String
     let url: URL
     let createdAt: Date
