@@ -14,14 +14,16 @@ struct AlbumsView: View {
             List {
                 ForEach(albumManager.albums) { album in
                     NavigationLink {
-                        EmptyView()
+                        AlbumDetailsView(album: album)
                     } label: {
                         HStack {
-                            VStack {
+                            VStack(alignment: .leading) {
                                 Text(album.name)
                                     .font(.headline)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
                                 Text(album.ownerName)
                                     .foregroundStyle(.secondary)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
                             }
                         }
                     }
@@ -36,9 +38,14 @@ struct AlbumsView: View {
                         Text("Add Album")
                     } icon: {
                         Image("plus.circle", bundle: .module)
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 25, height: 25)
+                            .tint(Color.actionColor)
                     }
 
                 }
+                .foregroundStyle(Color.actionColor)
             }
         }
         .task {

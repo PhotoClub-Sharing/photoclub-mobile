@@ -13,6 +13,12 @@ import SkipFirebaseFirestore
 import FirebaseFirestore
 #endif
 
+struct Photo: Identifiable, Codable {
+    let id: String
+    let url: URL
+    let createdAt: Date
+}
+
 struct Album: Identifiable, Codable {
     let id: String
     let name: String
@@ -61,5 +67,17 @@ final class AlbumManager: ObservableObject {
                 self.albums.append(albumData)
             }
         }
+    }
+    
+    func getPhotos(for album: Album) async throws -> [Photo] {
+        let firebaseAlbum = db.collection("Albums").document(album.id)
+        let firebasePhotos = try await firebaseAlbum.collection("Images").getDocuments()
+        
+        let photos: [Photo] = firebasePhotos.documents.compactMap { snapshot in
+            guard let urlString = snapshot.get("url") as? String, let url = URL(string: urlString), let date = snapshot.get("createdAt") as? Date else { return nil }
+            
+            return Photo(id: snapshot.documentID, url: url, createdAt: date)
+        }
+        return photos
     }
 }

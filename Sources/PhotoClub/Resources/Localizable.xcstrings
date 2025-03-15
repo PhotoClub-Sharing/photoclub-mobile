@@ -1,10 +1,13 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "Add Album" : {
+
+    },
     "Add Photos" : {
 
     },
-    "Add Album" : {
+    "Album" : {
 
     },
     "Albums" : {
