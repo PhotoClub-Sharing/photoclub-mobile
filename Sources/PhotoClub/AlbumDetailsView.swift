@@ -130,6 +130,7 @@ struct AlbumDetailsView: View {
     var photosLoadingIndicator: some View {
         if isShowingPhotosLoadingIndicator {
             ProgressView(value: albumManager.photoProgress, total: 1)
+                .animation(.default, value: albumManager.photoProgress)
         }
     }
 }

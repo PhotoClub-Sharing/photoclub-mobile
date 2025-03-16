@@ -48,12 +48,10 @@ final class AlbumManager: ObservableObject {
     }
     @Published private(set) var albums: [Album] = []
     
-    func joinAlbum(code: String) {
+    func joinAlbum(code: String) async throws {
         albumCodes.append(code)
         
-        Task {
-            try? await getAlbums()
-        }
+        try await getAlbums()
     }
     
     func leaveAlbum(code: String) {
@@ -64,8 +62,10 @@ final class AlbumManager: ObservableObject {
     func getAlbums() async throws {
         guard !albumCodes.isEmpty else { return }
         
-        let albums = try await db.collection("Albums").whereField("code", in: albumCodes.map({ $0 as Any })).getDocuments()
-        for album in albums.documents {
+        var albums: [Album] = []
+        
+        let firebaseAlbums = try await db.collection("Albums").whereField("code", in: albumCodes.map({ $0 as Any })).getDocuments()
+        for album in firebaseAlbums.documents {
             guard let name = album.get("name") as? String,
                   let code = album.get("code") as? String,
                   let startDate = album.get("startDate") as? Timestamp,
@@ -82,9 +82,11 @@ final class AlbumManager: ObservableObject {
                 thumbnailURL: URL(string: album.get("thumbnailURL") as? String ?? ""),
                 code: code
             )
-            await MainActor.run {
-                self.albums.append(albumData)
-            }
+                albums.append(albumData)
+        }
+    
+        await MainActor.run { [albums] in
+            self.albums = albums
         }
     }
     
@@ -125,7 +127,7 @@ final class AlbumManager: ObservableObject {
         
         try await db.collection("Albums").addDocument(data: ["name": name, "startDate": startTimestamp, "endDate": endTimestamp, "code": code])
         
-        try await getAlbums()
+        try await joinAlbum(code: code)
     }
     
     func addPhoto(toAlbum album: Album, imageURL: URL) async throws -> Photo {
