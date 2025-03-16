@@ -3,6 +3,11 @@ import UIKit
 
 public struct AuthView: View {
     @EnvironmentObject private var authManager: AuthManager
+    @State var email: String = ""
+    @State var password: String = ""
+    @State var password2: String = ""
+    
+    @State var isSigningUp: Bool = true
 
     public var body: some View {
         VStack(spacing: 40) {
@@ -12,22 +17,59 @@ public struct AuthView: View {
                 .frame(maxHeight: .infinity, alignment: .center)
             
             VStack {
-                Button {
+                TextField("Email", text: $email)
+                    .textFieldStyle(.roundedBorder)
+                SecureField("Password", text: $password)
+                    .textFieldStyle(.roundedBorder)
+                
+                if isSigningUp {
+                    SecureField("Confirm Password", text: $password2)
+                        .textFieldStyle(.roundedBorder)
                     
-                } label: {
-                    SVGLabel("Continue with Apple", tintColor: .white, icon: AppleLogo())
-                    .frame(maxWidth: .infinity)
-                }
-                .tint(Color.actionColor)
-                .buttonStyle(.borderedProminent)
-                Button {
+                    if password != password2 {
+                        Text("Passwords Do Not Match")
+                            .font(.caption)
+                            .foregroundStyle(.red)
+                    }
                     
-                } label: {
-                    SVGLabel("Continue with Google", tintColor: .white, icon: GoogleLogo())
-                    .frame(maxWidth: .infinity)
+                    Button {
+                        Task {
+                            try? await authManager.signUp(email: email, password: password)
+                        }
+                    } label: {
+                        Text("Sign Up")
+                            .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .disabled(password2 != password || email.isEmpty || password.isEmpty)
+                    
+                    Button {
+                        isSigningUp = false
+                    } label: {
+                        Text("Already have an account? Sign In")
+                            .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(.bordered)
+                } else {
+                    Button {
+                        Task {
+                            try? await authManager.signIn(email: email, password: password)
+                        }
+                    } label: {
+                        Text("Sign In")
+                            .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .disabled(email.isEmpty || password.isEmpty)
+                    
+                    Button {
+                        isSigningUp = false
+                    } label: {
+                        Text("Don't have an account? Sign Up")
+                            .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(.bordered)
                 }
-                .tint(Color.actionColor)
-                .buttonStyle(.borderedProminent)
                 
                 Button("Continue as Guest") {
                     Task {

@@ -10,6 +10,9 @@
     "Albums" : {
 
     },
+    "Already have an account? Sign In" : {
+
+    },
     "Appearance" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -45,13 +48,10 @@
     "Close" : {
 
     },
+    "Confirm Password" : {
+
+    },
     "Continue as Guest" : {
-
-    },
-    "Continue with Apple" : {
-
-    },
-    "Continue with Google" : {
 
     },
     "Copy %@" : {
@@ -90,6 +90,12 @@
       }
     },
     "Delete" : {
+
+    },
+    "Don't have an account? Sign Up" : {
+
+    },
+    "Email" : {
 
     },
     "End Date" : {
@@ -216,6 +222,12 @@
         }
       }
     },
+    "Password" : {
+
+    },
+    "Passwords Do Not Match" : {
+
+    },
     "Powered by Skip and %@" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -276,6 +288,12 @@
           }
         }
       }
+    },
+    "Sign In" : {
+
+    },
+    "Sign Up" : {
+
     },
     "Start Date" : {
 
