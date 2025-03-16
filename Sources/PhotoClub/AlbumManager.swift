@@ -130,16 +130,16 @@ final class AlbumManager: ObservableObject {
     
     func addPhoto(toAlbum album: Album, imageURL: URL) async throws -> Photo {
         let imageRef = storage.child("images/\(UUID().uuidString)-\(imageURL.lastPathComponent)")
-//        #if SKIP
+        #if SKIP
         let _ = try await imageRef.putFileAsync(from: imageURL)
-//        #else
-//        let _ = try await imageRef.putFileAsync(from: imageURL) { progress in
-//            guard let progress else { return }
-//            DispatchQueue.main.async {
-//                self.photoProgress = Double(progress.completedUnitCount) / Double(progress.totalUnitCount)
-//            }
-//        }
-//        #endif
+        #else
+        let _ = try await imageRef.putFileAsync(from: imageURL) { progress in
+            guard let progress else { return }
+            DispatchQueue.main.async {
+                self.photoProgress = Double(progress.completedUnitCount) / Double(progress.totalUnitCount)
+            }
+        }
+        #endif
         let downloadURL = try await imageRef.downloadURL()
         
         let documentReference = try await db.collection("Albums").document(album.id).collection("Images").addDocument(data: ["url": downloadURL.absoluteString, "createdAt": Timestamp(date: .now)])
