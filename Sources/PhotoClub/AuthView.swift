@@ -1,11 +1,8 @@
 import SwiftUI
 import UIKit
 
-public struct ContentView: View {
-    @State var appearance = ""
-
-    public init() {
-    }
+public struct AuthView: View {
+    @EnvironmentObject private var authManager: AuthManager
 
     public var body: some View {
         VStack(spacing: 40) {
