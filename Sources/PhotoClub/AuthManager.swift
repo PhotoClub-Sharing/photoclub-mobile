@@ -13,12 +13,12 @@ import SkipFirebaseAuth
 import FirebaseAuth
 #endif
 
-actor AuthManager: ObservableObject {
-    @MainActor @Published private var auth = Auth.auth()
-    @MainActor var currentUser: User? {
+final class AuthManager: ObservableObject {
+    @Published private var auth = Auth.auth()
+    var currentUser: User? {
         auth.currentUser
     }
-    @MainActor var isAuthenticated: Bool {
+    var isAuthenticated: Bool {
         currentUser != nil
     }
     
@@ -39,6 +39,6 @@ actor AuthManager: ObservableObject {
     }
     
     func signOut() async throws {
-        try await auth.signOut()
+        try auth.signOut()
     }
 }
