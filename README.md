@@ -5,5 +5,4 @@ PhotoClub is a crossplatform application for sharing photos, especially during e
 Instead of using ReactNative or Flutter, we decided to make it native on both iOS and Android. To achieve this, we used [skip.tools](https://skip.tools) to write an iOS app and **transpile** it for android. Thus, making it native on both iOS and Android with (a bit more than) half the time.
 
 ## Demo
-https://github.com/user-attachments/assets/7a5071a7-1e60-42d2-947e-17f2319e1bf2
-
+https://hc-cdn.hel1.your-objectstorage.com/s/v3/0fbddfa0da5a0c04426406ee036304da10c32baf_photoclub_demo.mp4
