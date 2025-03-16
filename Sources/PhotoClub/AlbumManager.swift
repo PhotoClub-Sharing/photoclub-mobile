@@ -44,8 +44,17 @@ final class AlbumManager: ObservableObject {
     }
     @Published private(set) var albums: [Album] = []
     
-    func addAlbum(code: String) {
+    func joinAlbum(code: String) {
         albumCodes.append(code)
+        
+        Task {
+            try? await getAlbums()
+        }
+    }
+    
+    func leaveAlbum(code: String) {
+        albumCodes.removeAll { $0 == code }
+        albums.removeAll { $0.code == code }
     }
     
     func getAlbums() async throws {

@@ -16,37 +16,24 @@ struct AlbumsView: View {
                     NavigationLink {
                         AlbumDetailsView(album: album)
                     } label: {
-                        HStack {
-                            if let url = album.thumbnailURL {
-                                AsyncImage(url: url) { image in
-                                    image
-                                        .resizable()
-                                        .scaledToFill()
-                                } placeholder: {
-                                    ProgressView()
-                                }
-                                .frame(width: 50, height: 50)
-                                .clipShape(RoundedRectangle(cornerRadius: 6))
-                            }
-                            VStack(alignment: .leading) {
-                                Text(album.name)
-                                    .font(.headline)
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                                Text(album.subtitle)
-                                    .font(.callout)
-                                    .foregroundStyle(.secondary)
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                            }
-                        }
+                        AlbumRow(album: album)
                     }
                 }
+                .onDelete { indexSet in
+                    for album in indexSet.reversed() {
+                        albumManager.leaveAlbum(code: albumManager.albums[album].code)
+                    }
+                }
+            }
+            .refreshable {
+                try? await albumManager.getAlbums()
             }
 //            .scrollContentBackground(.hidden)
 //            .background(Color.logoBackground.ignoresSafeArea())
             .navigationTitle("Albums")
             .toolbar {
                 Button {
-                    albumManager.addAlbum(code: "hello")
+                    albumManager.joinAlbum(code: "hello")
                 } label: {
                     Label("Add Album", systemImage: "plus.circle")
                         .labelStyle(.iconOnly)
@@ -57,6 +44,35 @@ struct AlbumsView: View {
         .tint(Color.actionColor)
         .task {
             try? await albumManager.getAlbums()
+        }
+    }
+}
+
+struct AlbumRow: View {
+    let album: Album
+    
+    var body: some View {
+        HStack {
+            if let url = album.thumbnailURL {
+                AsyncImage(url: url) { image in
+                    image
+                        .resizable()
+                        .scaledToFill()
+                } placeholder: {
+                    ProgressView()
+                }
+                .frame(width: 50, height: 50)
+                .clipShape(RoundedRectangle(cornerRadius: 6))
+            }
+            VStack(alignment: .leading) {
+                Text(album.name)
+                    .font(.headline)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                Text(album.subtitle)
+                    .font(.callout)
+                    .foregroundStyle(.secondary)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
         }
     }
 }
