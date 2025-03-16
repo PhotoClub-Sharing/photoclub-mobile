@@ -15,9 +15,10 @@ import FirebaseFirestore
 import FirebaseStorage
 #endif
 
-struct Photo: Identifiable, Codable, Hashable {
+struct Photo: Identifiable, Hashable {
     let id: String
     let url: URL
+    let image: UIImage?
     let createdAt: Date
 }
 
@@ -91,11 +92,16 @@ final class AlbumManager: ObservableObject {
         let firebaseAlbum = db.collection("Albums").document(album.id)
         let firebasePhotos = try await firebaseAlbum.collection("Images").order(by: "createdAt", descending: true).getDocuments()
         
-        let photos: [Photo] = firebasePhotos.documents.compactMap { snapshot in
-            guard let urlString = snapshot.get("url") as? String, let url = URL(string: urlString), let date = snapshot.get("createdAt") as? Timestamp else { return nil }
+        var photos: [Photo] = []
+        
+        for document in firebasePhotos.documents {
+            guard let urlString = document.get("url") as? String, let url = URL(string: urlString), let date = document.get("createdAt") as? Timestamp else { continue }
             
-            return Photo(id: snapshot.documentID, url: url, createdAt: date.dateValue())
+            let (imageData, _) = try await URLSession.shared.data(from: url)
+            
+            photos.append(Photo(id: document.documentID, url: url, image: UIImage(data: imageData), createdAt: date.dateValue()))
         }
+        
         return photos
     }
     
@@ -111,11 +117,11 @@ final class AlbumManager: ObservableObject {
     
     func addPhoto(toAlbum album: Album, imageURL: URL) async throws -> Photo {
         let imageRef = storage.child("images/\(imageURL.lastPathComponent)")
-        let uploadTask = try await imageRef.putFileAsync(from: imageURL)
+        let _ = try await imageRef.putFileAsync(from: imageURL)
         let downloadURL = try await imageRef.downloadURL()
         
         let documentReference = try await db.collection("Albums").document(album.id).collection("Images").addDocument(data: ["url": downloadURL.absoluteString, "createdAt": Timestamp(date: .now)])
-        return Photo(id: documentReference.documentID, url: imageURL, createdAt: Date())
+        return Photo(id: documentReference.documentID, url: imageURL, image: UIImage(data: (try? Data(contentsOf: imageURL)) ?? Data()), createdAt: Date())
     }
     
     private func randomString(length: Int) -> String {
