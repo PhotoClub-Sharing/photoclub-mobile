@@ -94,7 +94,7 @@ public struct AuthView: View {
             .padding(.horizontal, 30)
             .frame(maxWidth: .infinity, minHeight: 200, maxHeight: .infinity)
             .background(
-                UnevenRoundedRectangle(topLeadingRadius: 25, topTrailingRadius: 25)
+                UnevenRoundedRectangle(topLeadingRadius: 55, topTrailingRadius: 55)
                     .fill(Color.white)
             )
         }
