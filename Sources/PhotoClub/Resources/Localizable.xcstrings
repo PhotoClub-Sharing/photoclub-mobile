@@ -4,10 +4,7 @@
     "Add Album" : {
 
     },
-    "Add Photos" : {
-
-    },
-    "Album" : {
+    "Add Photo" : {
 
     },
     "Albums" : {
@@ -166,9 +163,6 @@
           }
         }
       }
-    },
-    "LOREM!" : {
-
     },
     "Name" : {
       "extractionState" : "stale",

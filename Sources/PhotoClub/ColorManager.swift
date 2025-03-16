@@ -30,4 +30,10 @@ extension Color {
     static var actionColor: Self {
         Color(#colorLiteral(red: 0.9803921569, green: 0.4509803922, blue: 0.2588235294, alpha: 1))
     }
+    
+    #if SKIP
+    static let secondarySystemBackground = Color.gray.opacity(0.5)
+    #else
+    static let secondarySystemBackground = Color(uiColor: .secondarySystemBackground)
+    #endif
 }
