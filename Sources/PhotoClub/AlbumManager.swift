@@ -22,9 +22,14 @@ struct Photo: Identifiable, Codable, Hashable {
 struct Album: Identifiable, Codable {
     let id: String
     let name: String
-    let ownerName: String
+    let startDate: Date
+    let endDate: Date
     let thumbnailURL: URL?
     let code: String
+    
+    var subtitle: String {
+        "\(startDate.formatted(date: .numeric, time: .shortened)) – \(endDate.formatted(date: .numeric, time: .shortened))"
+    }
 }
 
 final class AlbumManager: ObservableObject {
@@ -49,8 +54,9 @@ final class AlbumManager: ObservableObject {
         let albums = try await db.collection("Albums").whereField("code", in: albumCodes.map({ $0 as Any })).getDocuments()
         for album in albums.documents {
             guard let name = album.get("name") as? String,
-                  let ownerName = album.get("ownerName") as? String,
-                  let code = album.get("code") as? String
+                  let code = album.get("code") as? String,
+                  let startDate = album.get("startDate") as? Timestamp,
+                  let endDate = album.get("endDate") as? Timestamp
             else {
                 continue
             }
@@ -58,7 +64,8 @@ final class AlbumManager: ObservableObject {
             let albumData: Album = .init(
                 id: album.documentID,
                 name: name,
-                ownerName: ownerName,
+                startDate: startDate.dateValue(),
+                endDate: endDate.dateValue(),
                 thumbnailURL: URL(string: album.get("thumbnailURL") as? String ?? ""),
                 code: code
             )

@@ -32,7 +32,8 @@ struct AlbumsView: View {
                                 Text(album.name)
                                     .font(.headline)
                                     .frame(maxWidth: .infinity, alignment: .leading)
-                                Text(album.ownerName)
+                                Text(album.subtitle)
+                                    .font(.callout)
                                     .foregroundStyle(.secondary)
                                     .frame(maxWidth: .infinity, alignment: .leading)
                             }
