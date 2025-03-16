@@ -58,7 +58,7 @@ struct AlbumRow: View {
     
     var body: some View {
         HStack {
-            if let url = album.thumbnailURL {
+            if let url = album.thumbnailURL, !url.absoluteString.isEmpty {
                 AsyncImage(url: url) { image in
                     image
                         .resizable()
@@ -69,6 +69,7 @@ struct AlbumRow: View {
                 .frame(width: 50, height: 50)
                 .clipShape(RoundedRectangle(cornerRadius: 6))
             }
+            
             VStack(alignment: .leading) {
                 Text(album.name)
                     .font(.headline)
