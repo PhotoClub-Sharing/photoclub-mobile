@@ -17,6 +17,10 @@ public struct AuthView: View {
                 .frame(maxHeight: .infinity, alignment: .center)
             
             VStack {
+                Text("Sign In / Sign Up")
+                    .font(.title)
+                    .bold()
+                    .frame(maxWidth: .infinity, alignment: .leading)
                 TextField("Email", text: $email)
                     .textFieldStyle(.roundedBorder)
                     .keyboardType(.emailAddress)
