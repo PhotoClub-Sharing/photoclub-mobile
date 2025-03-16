@@ -129,7 +129,7 @@ final class AlbumManager: ObservableObject {
     }
     
     func addPhoto(toAlbum album: Album, imageURL: URL) async throws -> Photo {
-        let imageRef = storage.child("images/\(imageURL.lastPathComponent)")
+        let imageRef = storage.child("images/\(UUID().uuidString)-\(imageURL.lastPathComponent)")
 //        #if SKIP
         let _ = try await imageRef.putFileAsync(from: imageURL)
 //        #else
