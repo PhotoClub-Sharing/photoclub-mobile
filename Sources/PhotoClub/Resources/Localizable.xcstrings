@@ -39,6 +39,9 @@
         }
       }
     },
+    "Change Thumbnail" : {
+
+    },
     "Close" : {
 
     },
@@ -241,6 +244,9 @@
           }
         }
       }
+    },
+    "Select Thumbnail" : {
+
     },
     "Settings" : {
       "extractionState" : "stale",

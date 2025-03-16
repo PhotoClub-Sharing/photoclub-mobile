@@ -61,14 +61,14 @@ struct PhotoDetailsView: View {
             } label: {
                 Label("Close", systemImage: "xmark")
                     .labelStyle(.iconOnly)
+                    .padding(8)
+                    #if SKIP
+                    .background(Color.secondarySystemBackground, in: Circle())
+                    #else
+                    .background(.thinMaterial, in: Circle())
+                    #endif
             }
             .clipShape(Circle())
-            .padding(8)
-            #if SKIP
-            .background(Color.secondarySystemBackground, in: Circle())
-            #else
-            .background(.thinMaterial, in: Circle())
-            #endif
             .padding([.top, .trailing])
         }
         .overlay(alignment: .topLeading) {

@@ -120,12 +120,21 @@ final class AlbumManager: ObservableObject {
         return photos
     }
     
-    func createAlbum(withName name: String, startDate: Date, endDate: Date) async throws {
+    func createAlbum(withName name: String, startDate: Date, endDate: Date, thumbnail: URL?) async throws {
+        let albumId = UUID().uuidString
         let startTimestamp = Timestamp(date: startDate)
         let endTimestamp = Timestamp(date: endDate)
         let code = randomString(length: 4)
+        var data: [String: Any] = ["name": name, "startDate": startTimestamp, "endDate": endTimestamp, "code": code]
         
-        try await db.collection("Albums").addDocument(data: ["name": name, "startDate": startTimestamp, "endDate": endTimestamp, "code": code])
+        if let thumbnail {
+            let imageRef = storage.child("images/\(albumId)/thumbnail.\(thumbnail.pathExtension)")
+            let _ = try await imageRef.putFileAsync(from: thumbnail)
+            let thumbnailURL = try await imageRef.downloadURL()
+            data["thumbnailURL"] = thumbnailURL.absoluteString
+        }
+        
+        try await db.collection("Albums").document(albumId).setData(data)
         
         try await joinAlbum(code: code)
     }

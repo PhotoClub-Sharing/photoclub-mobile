@@ -19,76 +19,137 @@ struct JoinCreateAlbumView: View {
     @State var endDate: Date = .now.addingTimeInterval(60 * 60 * 24)
     @State var createIsLoading = false
     
+    @State var thumbnail: UIImage?
+    @State var thumbnailURL: URL?
+    @State var isShowingPhotoPicker = false
+    
     var body: some View {
-        VStack {
-            VStack {
-                Text("Join Album")
-                    .font(.title2)
-                Divider()
-                TextField("Enter Code", text: $code)
-                    .autocorrectionDisabled()
-                    .textInputAutocapitalization(.never)
-                    .textFieldStyle(.roundedBorder)
-                Button {
-                    Task {
-                        do {
-                            joinIsLoading = true
-                            defer { joinIsLoading = false }
-                            try await albumManager.joinAlbum(code: code)
-                            dismiss()
-                        } catch {
-                            print(error)
-                        }
-                    }
-                } label: {
-                    if joinIsLoading {
-                        ProgressView()
-                    } else {
+        NavigationStack {
+            ScrollView {
+                VStack {
+                    VStack {
                         Text("Join Album")
-                    }
-                }
-                .animation(.bouncy, value: joinIsLoading)
-            }
-            .padding(12)
-            .background(Color.secondarySystemBackground)
-            .clipShape(RoundedRectangle(cornerRadius: 6))
-            
-            Divider()
-            
-            VStack {
-                Text("Create Album")
-                    .font(.title2)
-                Divider()
-                TextField("Name", text: $name)
-                    .textFieldStyle(.roundedBorder)
-                
-                DatePicker("Start Date", selection: $startDate)
-                DatePicker("End Date", selection: $endDate)
-                Button {
-                    Task {
-                        do {
-                            createIsLoading = true
-                            defer { createIsLoading = false }
-                            try await albumManager.createAlbum(withName: name, startDate: startDate, endDate: endDate)
-                            dismiss()
-                        } catch {
-                            print(error)
+                            .font(.title2)
+                        Divider()
+                        TextField("Enter Code", text: $code)
+                            .autocorrectionDisabled()
+                            .textInputAutocapitalization(.never)
+                            .textFieldStyle(.roundedBorder)
+                        Button {
+                            Task {
+                                do {
+                                    joinIsLoading = true
+                                    defer { joinIsLoading = false }
+                                    try await albumManager.joinAlbum(code: code)
+                                    dismiss()
+                                } catch {
+                                    print(error)
+                                }
+                            }
+                        } label: {
+                            HStack {
+                                if joinIsLoading {
+                                    ProgressView()
+                                } else {
+                                    Text("Join Album")
+                                }
+                            }
+                            .frame(maxWidth: .infinity)
                         }
+                        .animation(.bouncy, value: joinIsLoading)
+                        .buttonStyle(.borderedProminent)
                     }
-                } label: {
-                    if createIsLoading {
-                        ProgressView()
-                    } else {
+                    .padding(12)
+                    .background(Color.secondarySystemBackground)
+                    .clipShape(RoundedRectangle(cornerRadius: 6))
+                    
+                    Divider()
+                    
+                    VStack {
                         Text("Create Album")
+                            .font(.title2)
+                        Divider()
+                        TextField("Name", text: $name)
+                            .textFieldStyle(.roundedBorder)
+                        
+                        DatePicker("Start Date", selection: $startDate)
+                        DatePicker("End Date", selection: $endDate)
+                        VStack {
+                            if let thumbnail {
+                                Image(uiImage: thumbnail)
+                                    .resizable()
+                                    .scaledToFit()
+                                //                            .frame(width: 50, height: 50)
+                                    .clipped()
+                                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                            }
+                            Button {
+                                isShowingPhotoPicker = true
+                            } label: {
+                                Text(thumbnail == nil ? "Select Thumbnail" : "Change Thumbnail")
+                                    .frame(maxWidth: .infinity)
+                            }
+                            .buttonStyle(.bordered)
+                        }
+                        .withMediaPicker(type: .library, isPresented: $isShowingPhotoPicker, selectedImageURL: $thumbnailURL, detents: [.large])
+                        .onChange(of: thumbnailURL) { _, newValue in
+                            guard let newValue else {
+                                self.thumbnail = nil
+                                return
+                            }
+                            
+                            do {
+                                let data = try Data(contentsOf: newValue)
+                                guard let image = UIImage(data: data) else { return }
+                                self.thumbnail = image
+                            } catch {
+                                print(error)
+                            }
+                        }
+                        Button {
+                            Task {
+                                do {
+                                    createIsLoading = true
+                                    defer { createIsLoading = false }
+                                    try await albumManager.createAlbum(withName: name, startDate: startDate, endDate: endDate, thumbnail: thumbnailURL)
+                                    dismiss()
+                                } catch {
+                                    print(error)
+                                }
+                            }
+                        } label: {
+                            HStack {
+                                if createIsLoading {
+                                    ProgressView()
+                                } else {
+                                    Text("Create Album")
+                                }
+                            }
+                            .frame(maxWidth: .infinity)
+                        }
+                        .animation(.bouncy, value: createIsLoading)
+                        .buttonStyle(.borderedProminent)
                     }
+                    .padding(12)
+                    .background(Color.secondarySystemBackground)
+                    .clipShape(RoundedRectangle(cornerRadius: 6))
                 }
-                .animation(.bouncy, value: createIsLoading)
+                .padding()
             }
-            .padding(12)
-            .background(Color.secondarySystemBackground)
-            .clipShape(RoundedRectangle(cornerRadius: 6))
+            .toolbar {
+                #if !SKIP
+                Button {
+                    dismiss()
+                } label: {
+                    Label("Close", systemImage: "xmark")
+                        .labelStyle(.iconOnly)
+                        .padding(8)
+                        .background(Color.secondarySystemBackground, in: Circle())
+                }
+                .clipShape(Circle())
+                #endif
+            }
         }
-        .padding()
     }
 }
 
