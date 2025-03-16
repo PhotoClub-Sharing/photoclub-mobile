@@ -23,7 +23,9 @@ let package = Package(
         .target(name: "PhotoClub", dependencies: [
             .product(name: "SkipUI", package: "skip-ui"),
             .product(name: "SkipKit", package: "skip-kit"),
-            .product(name: "SkipFirebaseFirestore", package: "skip-firebase")
+            .product(name: "SkipFirebaseFirestore", package: "skip-firebase"),
+            .product(name: "SkipFirebaseStorage", package: "skip-firebase"),
+            .product(name: "SkipFirebaseAuth", package: "skip-firebase"),
         ], resources: [.process("Resources")], plugins: [.plugin(name: "skipstone", package: "skip")]),
         .testTarget(name: "PhotoClubTests", dependencies: [
             "PhotoClub",
