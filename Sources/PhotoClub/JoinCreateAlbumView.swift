@@ -9,6 +9,7 @@ import SwiftUI
 
 struct JoinCreateAlbumView: View {
     @EnvironmentObject var albumManager: AlbumManager
+    @EnvironmentObject var authManager: AuthManager
     @Environment(\.dismiss) var dismiss
     
     @State var code: String = ""
@@ -22,6 +23,8 @@ struct JoinCreateAlbumView: View {
     @State var thumbnail: UIImage?
     @State var thumbnailURL: URL?
     @State var isShowingPhotoPicker = false
+    
+    @State var isShowingSignIn = false
     
     var body: some View {
         NavigationStack {
@@ -107,26 +110,37 @@ struct JoinCreateAlbumView: View {
                                 print(error)
                             }
                         }
-                        Button {
-                            Task {
-                                do {
-                                    createIsLoading = true
-                                    defer { createIsLoading = false }
-                                    try await albumManager.createAlbum(withName: name, startDate: startDate, endDate: endDate, thumbnail: thumbnailURL)
-                                    dismiss()
-                                } catch {
-                                    print(error)
+                        Group {
+                            if authManager.isGuest {
+                                Button {
+                                    isShowingSignIn = true
+                                } label: {
+                                    Text("Sign In")
+                                        .frame(maxWidth: .infinity)
+                                }
+                            } else {
+                                Button {
+                                    Task {
+                                        do {
+                                            createIsLoading = true
+                                            defer { createIsLoading = false }
+                                            try await albumManager.createAlbum(withName: name, startDate: startDate, endDate: endDate, thumbnail: thumbnailURL)
+                                            dismiss()
+                                        } catch {
+                                            print(error)
+                                        }
+                                    }
+                                } label: {
+                                    HStack {
+                                        if createIsLoading {
+                                            ProgressView()
+                                        } else {
+                                            Text("Create Album")
+                                        }
+                                    }
+                                    .frame(maxWidth: .infinity)
                                 }
                             }
-                        } label: {
-                            HStack {
-                                if createIsLoading {
-                                    ProgressView()
-                                } else {
-                                    Text("Create Album")
-                                }
-                            }
-                            .frame(maxWidth: .infinity)
                         }
                         .animation(.bouncy, value: createIsLoading)
                         .buttonStyle(.borderedProminent)
@@ -137,6 +151,9 @@ struct JoinCreateAlbumView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 6))
                 }
                 .padding()
+            }
+            .sheet(isPresented: $isShowingSignIn) {
+                AuthView()
             }
             .toolbar {
                 #if !SKIP
