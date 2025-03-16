@@ -31,6 +31,9 @@ final class AuthManager: ObservableObject {
     var isAuthenticated: Bool {
         currentUser != nil
     }
+    var isGuest: Bool {
+        currentUser?.isAnonymous == true
+    }
     
     func signUp(email: String, password: String) async throws {
         try await auth.createUser(withEmail: email, password: password)

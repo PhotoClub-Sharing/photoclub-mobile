@@ -6,8 +6,48 @@ public struct AuthView: View {
     @State var email: String = ""
     @State var password: String = ""
     @State var password2: String = ""
+    @State var isShowErrorAlert: Bool = false
+    @State var errorAlertMessage: String = ""
     
     @State var isSigningUp: Bool = true
+    
+    func showError(message: String) {
+        isShowErrorAlert = true
+        errorAlertMessage = message
+    }
+    
+    func signUp() {
+        Task {
+            do {
+                try await authManager.signUp(email: email, password: password)
+            } catch {
+                print(error)
+                showError(message: error.localizedDescription)
+            }
+        }
+    }
+    
+    func signIn() {
+        Task {
+            do {
+                try await authManager.signIn(email: email, password: password)
+            } catch {
+                print(error)
+                showError(message: error.localizedDescription)
+            }
+        }
+    }
+    
+    func signInAnnonymously() {
+        Task {
+            do {
+                try await authManager.signInAnnonymously()
+            } catch {
+                print(error)
+                showError(message: error.localizedDescription)
+            }
+        }
+    }
 
     public var body: some View {
         VStack(spacing: 40) {
@@ -37,11 +77,7 @@ public struct AuthView: View {
                             .foregroundStyle(.red)
                     }
                     
-                    Button {
-                        Task {
-                            try? await authManager.signUp(email: email, password: password)
-                        }
-                    } label: {
+                    Button(action: signUp) {
                         Text("Sign Up")
                             .frame(maxWidth: .infinity)
                     }
@@ -58,11 +94,7 @@ public struct AuthView: View {
                     .buttonStyle(.bordered)
                     .tint(.actionColor)
                 } else {
-                    Button {
-                        Task {
-                            try? await authManager.signIn(email: email, password: password)
-                        }
-                    } label: {
+                    Button(action: signIn) {
                         Text("Sign In")
                             .frame(maxWidth: .infinity)
                     }
@@ -81,11 +113,7 @@ public struct AuthView: View {
                     
                 }
                 
-                Button {
-                    Task {
-                        try? await authManager.signInAnnonymously()
-                    }
-                } label: {
+                Button(action: signInAnnonymously) {
                     Text("Continue as Guest")
                         .frame(maxWidth: .infinity)
                 }
@@ -99,6 +127,11 @@ public struct AuthView: View {
             )
         }
         .animation(.default, value: isSigningUp)
+        .alert("Uh Oh", isPresented: $isShowErrorAlert, actions: {
+            Button("ok") {}
+        }, message: {
+            Text(errorAlertMessage)
+        })
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .ignoresSafeArea(edges: .bottom)
         .background(Color.logoBackground.ignoresSafeArea())
