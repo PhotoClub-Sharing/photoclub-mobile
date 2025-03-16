@@ -119,6 +119,8 @@ public struct AuthView: View {
                 }
                     .foregroundStyle(Color.primary)
             }
+            .autocorrectionDisabled()
+            .textInputAutocapitalization(.never)
             .padding(.horizontal, 30)
             .frame(maxWidth: .infinity, minHeight: 200, maxHeight: .infinity)
             .background(
