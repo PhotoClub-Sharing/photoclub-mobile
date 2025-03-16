@@ -7,6 +7,7 @@ struct AlbumDetailsView: View {
     @State private var photos: [Photo] = [] // Array to store final selected images
     @State private var isShowingPhotoPicker = false
     @State private var selectedImageURL: URL?
+    @State private var isShowingPhotosLoadingIndicator: Bool = false
     #if !SKIP
     @Namespace var namespace
     #endif
@@ -16,6 +17,9 @@ struct AlbumDetailsView: View {
     
     var body: some View {
         ScrollView {
+            #if SKIP
+            photosLoadingIndicator
+            #endif
             LazyVGrid(columns: columns, alignment: .center) {
                 Button {
                     isShowingPhotoPicker = true
@@ -57,6 +61,11 @@ struct AlbumDetailsView: View {
             }
             .padding()
         }
+        #if !SKIP
+        .safeAreaInset(edge: .top, content: {
+            photosLoadingIndicator
+        })
+        #endif
         .navigationTitle(album.name)
         .fullScreenCover(item: $photoDetailSheetItem, content: { photo in
             if #available(iOS 18.0, *) {
@@ -68,12 +77,12 @@ struct AlbumDetailsView: View {
                 PhotoDetailsView(photos: photos, selectedPhoto: photo)
             }
         })
+        .refreshable {
+            self.photos.removeAll()
+            await fetchPhotos()
+        }
         .task {
-            do {
-                self.photos = try await albumManager.getPhotos(for: album)
-            } catch {
-                print(error)
-            }
+            await fetchPhotos()
         }
 //        .background(Color.logoBackground.ignoresSafeArea())
 //        .padding(.top, -30)  // Removed extra padding at the top of the screen
@@ -86,13 +95,41 @@ struct AlbumDetailsView: View {
                 do {
                     defer {
                         self.selectedImageURL = nil
+                        #if !SKIP
+                        self.isShowingPhotosLoadingIndicator = false
+                        #endif
                     }
+                    #if !SKIP
+                    self.isShowingPhotosLoadingIndicator = true
+                    #endif
                     let photo = try await albumManager.addPhoto(toAlbum: album, imageURL: newValue)
                     self.photos.insert(photo, at: 0)
                 } catch {
                     print(error)
                 }
             }
+        }
+    }
+    
+    func fetchPhotos() async {
+        do {
+            self.isShowingPhotosLoadingIndicator = true
+            defer {
+                self.isShowingPhotosLoadingIndicator = false
+                
+            }
+            try await albumManager.getPhotos(for: album) { photo in
+                self.photos.append(photo)
+            }
+        } catch {
+            print(error)
+        }
+    }
+    
+    @ViewBuilder
+    var photosLoadingIndicator: some View {
+        if isShowingPhotosLoadingIndicator {
+            ProgressView(value: albumManager.photoProgress, total: 1)
         }
     }
 }

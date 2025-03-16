@@ -88,19 +88,32 @@ final class AlbumManager: ObservableObject {
         }
     }
     
-    func getPhotos(for album: Album) async throws -> [Photo] {
+    @Published var photoProgress: CGFloat = 0
+    func getPhotos(for album: Album, addPhoto: @escaping (Photo) -> Void) async throws {
+        defer {
+            DispatchQueue.main.async {
+                self.photoProgress = 0
+            }
+        }
         let firebaseAlbum = db.collection("Albums").document(album.id)
         let firebasePhotos = try await firebaseAlbum.collection("Images").order(by: "createdAt", descending: true).getDocuments()
         
-        var photos: [Photo] = []
-        
-        for document in firebasePhotos.documents {
+        for (i, document) in firebasePhotos.documents.enumerated() {
             guard let urlString = document.get("url") as? String, let url = URL(string: urlString), let date = document.get("createdAt") as? Timestamp else { continue }
             
             let (imageData, _) = try await URLSession.shared.data(from: url)
             
-            photos.append(Photo(id: document.documentID, url: url, image: UIImage(data: imageData), createdAt: date.dateValue()))
+            await MainActor.run {
+                photoProgress = CGFloat(i+1)/CGFloat(firebasePhotos.count)
+            }
+            addPhoto(Photo(id: document.documentID, url: url, image: UIImage(data: imageData), createdAt: date.dateValue()))
         }
+    }
+    
+    func getPhotos(for album: Album) async throws -> [Photo] {
+        var photos: [Photo] = []
+        
+        try await getPhotos(for: album, addPhoto: { photos.append($0) })
         
         return photos
     }
@@ -117,7 +130,16 @@ final class AlbumManager: ObservableObject {
     
     func addPhoto(toAlbum album: Album, imageURL: URL) async throws -> Photo {
         let imageRef = storage.child("images/\(imageURL.lastPathComponent)")
+//        #if SKIP
         let _ = try await imageRef.putFileAsync(from: imageURL)
+//        #else
+//        let _ = try await imageRef.putFileAsync(from: imageURL) { progress in
+//            guard let progress else { return }
+//            DispatchQueue.main.async {
+//                self.photoProgress = Double(progress.completedUnitCount) / Double(progress.totalUnitCount)
+//            }
+//        }
+//        #endif
         let downloadURL = try await imageRef.downloadURL()
         
         let documentReference = try await db.collection("Albums").document(album.id).collection("Images").addDocument(data: ["url": downloadURL.absoluteString, "createdAt": Timestamp(date: .now)])
