@@ -40,6 +40,8 @@ struct AlbumsView: View {
                     }
                 }
             }
+//            .scrollContentBackground(.hidden)
+//            .background(Color.logoBackground.ignoresSafeArea())
             .navigationTitle("Albums")
             .toolbar {
                 Button {
