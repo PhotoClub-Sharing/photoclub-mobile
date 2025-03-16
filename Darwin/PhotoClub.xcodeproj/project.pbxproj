@@ -30,6 +30,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		221AFBED2D878882000A41BC /* PhotoClub.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PhotoClub.entitlements; sourceTree = "<group>"; };
 		221DF2732D86043B00E4940B /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		221DF2772D86115D00E4940B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4900101C2BACEA710000DE33 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -82,6 +83,7 @@
 		49F90C1F2A52156200F06D93 = {
 			isa = PBXGroup;
 			children = (
+				221AFBED2D878882000A41BC /* PhotoClub.entitlements */,
 				496EB72F2A6AE4DE00C1253C /* README.md */,
 				496EB72F2A6AE4DE00C1253A /* Skip.env */,
 				496EB72F2A6AE4DE00C1253B /* PhotoClub.xcconfig */,
@@ -215,10 +217,14 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 496EB72F2A6AE4DE00C1253B /* PhotoClub.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = PhotoClub.entitlements;
 				DEVELOPMENT_TEAM = L7JQRVXU2V;
 				ENABLE_PREVIEWS = YES;
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "PhotoClub would like to access your location";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "PhotoClub would like to access your location";
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.mcrich23.photoclub-mobile";
 			};
 			name = Debug;
 		};
@@ -226,10 +232,14 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 496EB72F2A6AE4DE00C1253B /* PhotoClub.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = PhotoClub.entitlements;
 				DEVELOPMENT_TEAM = L7JQRVXU2V;
 				ENABLE_PREVIEWS = YES;
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "PhotoClub would like to access your location";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "PhotoClub would like to access your location";
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.mcrich23.photoclub-mobile";
 			};
 			name = Release;
 		};
