@@ -14,6 +14,7 @@ struct PhotoDetailsView: View {
     @State var selectedPhoto: Photo
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var albumManager: AlbumManager
+    @EnvironmentObject var authManager: AuthManager
     
     var body: some View {
         if #available(iOS 18.0, *), let namespace {
@@ -72,35 +73,42 @@ struct PhotoDetailsView: View {
             .padding([.top, .trailing])
         }
         .overlay(alignment: .topLeading) {
-            Button(role: .destructive) {
-                Task {
-                    let photo = selectedPhoto
-                    try? await albumManager.deletePhoto(fromAlbum: album, photo: photo)
-                    if selectedPhoto == photo {
-                        if photos.count > 1, let index = photos.firstIndex(where: { $0.id == photo.id }) {
-                            if index == 0 {
-                                self.selectedPhoto = photos[max(index + 1, 0)]
-                            } else {
-                                self.selectedPhoto = photos[max(index - 1, 0)]
-                            }
-                        } else {
-                            dismiss()
-                        }
-                    }
-                    self.photos.removeAll(where: { $0.id == photo.id })
+            if let currentUser = authManager.currentUser, currentUser.uid == album.ownerID {
+                Button(role: .destructive) {
+                    deletePhoto()
+                } label: {
+                    Label("Delete", systemImage: "trash")
+                        .labelStyle(.iconOnly)
                 }
-            } label: {
-                Label("Delete", systemImage: "trash")
-                    .labelStyle(.iconOnly)
+                .clipShape(Circle())
+                .padding(8)
+#if SKIP
+                .background(Color.secondarySystemBackground, in: Circle())
+#else
+                .background(.thinMaterial, in: Circle())
+#endif
+                .padding([.top, .leading])
             }
-            .clipShape(Circle())
-            .padding(8)
-            #if SKIP
-            .background(Color.secondarySystemBackground, in: Circle())
-            #else
-            .background(.thinMaterial, in: Circle())
-            #endif
-            .padding([.top, .leading])
+        }
+    }
+    
+    func deletePhoto() {
+        guard let currentUser = authManager.currentUser else { return }
+        Task {
+            let photo = selectedPhoto
+            try? await albumManager.deletePhoto(fromAlbum: album, photo: photo, for: currentUser)
+            if selectedPhoto == photo {
+                if photos.count > 1, let index = photos.firstIndex(where: { $0.id == photo.id }) {
+                    if index == 0 {
+                        self.selectedPhoto = photos[max(index + 1, 0)]
+                    } else {
+                        self.selectedPhoto = photos[max(index - 1, 0)]
+                    }
+                } else {
+                    dismiss()
+                }
+            }
+            self.photos.removeAll(where: { $0.id == photo.id })
         }
     }
 }

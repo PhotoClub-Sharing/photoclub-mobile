@@ -111,20 +111,13 @@ struct JoinCreateAlbumView: View {
                             }
                         }
                         Group {
-                            if authManager.isGuest {
-                                Button {
-                                    isShowingSignIn = true
-                                } label: {
-                                    Text("Sign In")
-                                        .frame(maxWidth: .infinity)
-                                }
-                            } else {
+                            if let currentUser = authManager.currentUser, !authManager.isGuest {
                                 Button {
                                     Task {
                                         do {
                                             createIsLoading = true
                                             defer { createIsLoading = false }
-                                            try await albumManager.createAlbum(withName: name, startDate: startDate, endDate: endDate, thumbnail: thumbnailURL)
+                                            try await albumManager.createAlbum(withName: name, startDate: startDate, endDate: endDate, thumbnail: thumbnailURL, for: currentUser)
                                             dismiss()
                                         } catch {
                                             print(error)
@@ -139,6 +132,13 @@ struct JoinCreateAlbumView: View {
                                         }
                                     }
                                     .frame(maxWidth: .infinity)
+                                }
+                            } else {
+                                Button {
+                                    isShowingSignIn = true
+                                } label: {
+                                    Text("Sign In")
+                                        .frame(maxWidth: .infinity)
                                 }
                             }
                         }

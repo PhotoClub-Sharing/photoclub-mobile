@@ -4,6 +4,7 @@ import SkipKit
 struct AlbumDetailsView: View {
     let album: Album
     @EnvironmentObject var albumManager: AlbumManager
+    @EnvironmentObject var authManager: AuthManager
     @State private var photos: [Photo] = [] // Array to store final selected images
     @State private var isShowingPhotoPicker = false
     @State private var selectedImageURL: URL?
@@ -61,13 +62,15 @@ struct AlbumDetailsView: View {
                     }
                     #if !SKIP
                     .contextMenu {
-                        Button(role: .destructive) {
-                            Task {
-                                try? await albumManager.deletePhoto(fromAlbum: album, photo: photo)
-                                self.photos.removeAll(where: { $0.id == photo.id })
+                        if let currentUser = authManager.currentUser, currentUser.uid == album.ownerID {
+                            Button(role: .destructive) {
+                                Task {
+                                    try? await albumManager.deletePhoto(fromAlbum: album, photo: photo, for: currentUser)
+                                    self.photos.removeAll(where: { $0.id == photo.id })
+                                }
+                            } label: {
+                                Label("Delete", systemImage: "trash")
                             }
-                        } label: {
-                            Label("Delete", systemImage: "trash")
                         }
                     }
                     #endif
