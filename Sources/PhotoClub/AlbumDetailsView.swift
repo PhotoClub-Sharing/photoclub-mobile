@@ -69,7 +69,7 @@ struct AlbumDetailsView: View {
                 print(error)
             }
         }
-        .background(Color.logoBackground.ignoresSafeArea())
+//        .background(Color.logoBackground.ignoresSafeArea())
 //        .padding(.top, -30)  // Removed extra padding at the top of the screen
         .withMediaPicker(type: .library, isPresented: $isShowingPhotoPicker, selectedImageURL: $selectedImageURL, detents: [.large])
     
