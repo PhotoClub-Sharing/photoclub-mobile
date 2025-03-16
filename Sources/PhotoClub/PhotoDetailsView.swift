@@ -37,7 +37,7 @@ struct PhotoDetailsView: View {
             }
         }
         #if !SKIP
-        .indexViewStyle(PageIndexViewStyle(backgroundDisplayMode: .always))
+        .indexViewStyle(PageIndexViewStyle(backgroundDisplayMode: photos.count > 1 ? .always : .never))
         #endif
         .tabViewStyle(.page(indexDisplayMode: .always))
         .overlay(alignment: .topTrailing) {
