@@ -1,4 +1,4 @@
-# PhotoClub Mobike
+# PhotoClub Mobile
 PhotoClub is a crossplatform application for sharing photos, especially during events. In it, a user will sign up and create an album, and then all attendes can join it (without signing in).
 
 ## Making it Crossplatform
