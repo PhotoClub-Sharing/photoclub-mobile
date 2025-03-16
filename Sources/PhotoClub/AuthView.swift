@@ -30,7 +30,9 @@ public struct AuthView: View {
                 .buttonStyle(.borderedProminent)
                 
                 Button("Continue as Guest") {
-                    
+                    Task {
+                        try? await authManager.signInAnnonymously()
+                    }
                 }
                     .foregroundStyle(Color.primary)
             }
