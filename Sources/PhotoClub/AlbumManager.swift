@@ -89,7 +89,7 @@ final class AlbumManager: ObservableObject {
     
     func getPhotos(for album: Album) async throws -> [Photo] {
         let firebaseAlbum = db.collection("Albums").document(album.id)
-        let firebasePhotos = try await firebaseAlbum.collection("Images").getDocuments()
+        let firebasePhotos = try await firebaseAlbum.collection("Images").order(by: "createdAt", descending: true).getDocuments()
         
         let photos: [Photo] = firebasePhotos.documents.compactMap { snapshot in
             guard let urlString = snapshot.get("url") as? String, let url = URL(string: urlString), let date = snapshot.get("createdAt") as? Timestamp else { return nil }
@@ -114,7 +114,7 @@ final class AlbumManager: ObservableObject {
         let uploadTask = try await imageRef.putFileAsync(from: imageURL)
         let downloadURL = try await imageRef.downloadURL()
         
-        let documentReference = try await db.collection("Albums").document(album.id).collection("Images").addDocument(data: ["url": downloadURL.absoluteString, "createdAt": Timestamp()])
+        let documentReference = try await db.collection("Albums").document(album.id).collection("Images").addDocument(data: ["url": downloadURL.absoluteString, "createdAt": Timestamp(date: .now)])
         return Photo(id: documentReference.documentID, url: imageURL, createdAt: Date())
     }
     
