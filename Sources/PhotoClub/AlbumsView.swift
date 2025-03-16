@@ -9,6 +9,8 @@ import SwiftUI
 
 struct AlbumsView: View {
     @EnvironmentObject var albumManager: AlbumManager
+    @State var isShowingJoinCreateAlbumSheet: Bool = false
+    
     var body: some View {
         NavigationStack {
             List {
@@ -33,7 +35,7 @@ struct AlbumsView: View {
             .navigationTitle("Albums")
             .toolbar {
                 Button {
-                    albumManager.joinAlbum(code: "hello")
+                    isShowingJoinCreateAlbumSheet = true
                 } label: {
                     Label("Add Album", systemImage: "plus.circle")
                         .labelStyle(.iconOnly)
@@ -41,6 +43,9 @@ struct AlbumsView: View {
                 .foregroundStyle(Color.actionColor)
             }
         }
+        .sheet(isPresented: $isShowingJoinCreateAlbumSheet, content: {
+            JoinCreateAlbumView()
+        })
         .tint(Color.actionColor)
         .task {
             try? await albumManager.getAlbums()

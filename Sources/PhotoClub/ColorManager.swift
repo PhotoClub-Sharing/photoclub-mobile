@@ -32,7 +32,7 @@ extension Color {
     }
     
     #if SKIP
-    static let secondarySystemBackground = Color.gray.opacity(0.5)
+    static let secondarySystemBackground = Color.gray.opacity(0.1)
     #else
     static let secondarySystemBackground = Color(uiColor: .secondarySystemBackground)
     #endif

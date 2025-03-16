@@ -51,6 +51,9 @@
     "Continue with Google" : {
 
     },
+    "Create Album" : {
+
+    },
     "Dark" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -79,6 +82,12 @@
           }
         }
       }
+    },
+    "End Date" : {
+
+    },
+    "Enter Code" : {
+
     },
     "Hello [%@](https://skip.tools)!" : {
       "extractionState" : "stale",
@@ -138,6 +147,9 @@
         }
       }
     },
+    "Join Album" : {
+
+    },
     "Light" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -168,7 +180,6 @@
       }
     },
     "Name" : {
-      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -253,6 +264,9 @@
           }
         }
       }
+    },
+    "Start Date" : {
+
     },
     "System" : {
       "extractionState" : "stale",
