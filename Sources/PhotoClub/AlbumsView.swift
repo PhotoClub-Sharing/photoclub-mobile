@@ -9,6 +9,7 @@ import SwiftUI
 
 struct AlbumsView: View {
     @EnvironmentObject var albumManager: AlbumManager
+    @EnvironmentObject var authManager: AuthManager
     @State var isShowingJoinCreateAlbumSheet: Bool = false
     @State var isShowingSettingsSheet: Bool = false
     
@@ -58,9 +59,13 @@ struct AlbumsView: View {
         .sheet(isPresented: $isShowingJoinCreateAlbumSheet, content: {
             JoinCreateAlbumView()
                 .presentationDetents([.fraction(0.7), .large])
+                .environmentObject(authManager)
+                .environmentObject(albumManager)
         })
         .sheet(isPresented: $isShowingSettingsSheet, content: {
             SettingsView()
+                .environmentObject(authManager)
+                .environmentObject(albumManager)
         })
         .tint(Color.actionColor)
         .task {

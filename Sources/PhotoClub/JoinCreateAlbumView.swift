@@ -154,6 +154,8 @@ struct JoinCreateAlbumView: View {
             }
             .sheet(isPresented: $isShowingSignIn) {
                 AuthView()
+                    .environmentObject(authManager)
+                    .environmentObject(albumManager)
             }
             .toolbar {
                 #if !SKIP

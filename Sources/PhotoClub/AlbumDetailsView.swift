@@ -87,8 +87,12 @@ struct AlbumDetailsView: View {
         .fullScreenCover(item: $photoDetailSheetItem, content: { photo in
             #if !SKIP
             PhotoDetailsView(album: album, namespace: namespace, photos: $photos, selectedPhoto: photo)
+                .environmentObject(authManager)
+                .environmentObject(albumManager)
             #else
             PhotoDetailsView(album: album, namespace: nil, photos: $photos, selectedPhoto: photo)
+                .environmentObject(authManager)
+                .environmentObject(albumManager)
             #endif
         })
         .toolbar(content: {
