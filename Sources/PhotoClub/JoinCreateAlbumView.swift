@@ -58,6 +58,7 @@ struct JoinCreateAlbumView: View {
                         }
                         .animation(.bouncy, value: joinIsLoading)
                         .buttonStyle(.borderedProminent)
+                        .disabled(code.isEmpty)
                     }
                     .padding(12)
                     .background(Color.secondarySystemBackground)
@@ -129,6 +130,7 @@ struct JoinCreateAlbumView: View {
                         }
                         .animation(.bouncy, value: createIsLoading)
                         .buttonStyle(.borderedProminent)
+                        .disabled(name.isEmpty)
                     }
                     .padding(12)
                     .background(Color.secondarySystemBackground)
