@@ -17,6 +17,17 @@ struct AlbumsView: View {
                         AlbumDetailsView(album: album)
                     } label: {
                         HStack {
+                            if let url = album.thumbnailURL {
+                                AsyncImage(url: url) { image in
+                                    image
+                                        .resizable()
+                                        .scaledToFill()
+                                } placeholder: {
+                                    ProgressView()
+                                }
+                                .frame(width: 50, height: 50)
+                                .clipShape(RoundedRectangle(cornerRadius: 6))
+                            }
                             VStack(alignment: .leading) {
                                 Text(album.name)
                                     .font(.headline)

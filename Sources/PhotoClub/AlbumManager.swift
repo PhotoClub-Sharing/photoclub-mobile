@@ -59,7 +59,7 @@ final class AlbumManager: ObservableObject {
                 id: album.documentID,
                 name: name,
                 ownerName: ownerName,
-                thumbnailURL: nil,
+                thumbnailURL: URL(string: album.get("thumbnailURL") as? String ?? ""),
                 code: code
             )
             await MainActor.run {
