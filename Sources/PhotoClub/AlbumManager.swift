@@ -131,7 +131,7 @@ final class AlbumManager: ObservableObject {
     }
     
     func addPhoto(toAlbum album: Album, imageURL: URL) async throws -> Photo {
-        let imageRef = storage.child("images/\(UUID().uuidString)-\(imageURL.lastPathComponent)")
+        let imageRef = storage.child("images/\(album.id)/\(UUID().uuidString).\(imageURL.pathExtension)")
         #if SKIP
         let _ = try await imageRef.putFileAsync(from: imageURL)
         #else
@@ -146,6 +146,12 @@ final class AlbumManager: ObservableObject {
         
         let documentReference = try await db.collection("Albums").document(album.id).collection("Images").addDocument(data: ["url": downloadURL.absoluteString, "createdAt": Timestamp(date: .now)])
         return Photo(id: documentReference.documentID, url: imageURL, image: UIImage(data: (try? Data(contentsOf: imageURL)) ?? Data()), createdAt: Date())
+    }
+    
+    func deletePhoto(fromAlbum album: Album, photo: Photo) async throws {
+        try await db.collection("Albums").document(album.id).collection("Images").document(photo.id).delete()
+        let imageRef = storage.child("images/\(album.id)/\(photo.id).\(photo.url.pathExtension)")
+        try await imageRef.delete()
     }
     
     private func randomString(length: Int) -> String {

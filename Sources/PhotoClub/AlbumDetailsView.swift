@@ -41,22 +41,36 @@ struct AlbumDetailsView: View {
 
                 }
                 ForEach(photos, id: \.self) { photo in
-                    if #available(iOS 18.0, *) {
-                        Button {
-                            photoDetailSheetItem = photo
-                        } label: {
-                            PhotoCell(photo: photo)
-                        }
+                    Group {
+                        if #available(iOS 18.0, *) {
+                            Button {
+                                photoDetailSheetItem = photo
+                            } label: {
+                                PhotoCell(photo: photo)
+                            }
 #if !SKIP
-                        .matchedTransitionSource(id: photo.id, in: namespace)
+                            .matchedTransitionSource(id: photo.id, in: namespace)
 #endif
-                    } else {
-                        Button {
-                            photoDetailSheetItem = photo
-                        } label: {
-                            PhotoCell(photo: photo)
+                        } else {
+                            Button {
+                                photoDetailSheetItem = photo
+                            } label: {
+                                PhotoCell(photo: photo)
+                            }
                         }
                     }
+                    #if !SKIP
+                    .contextMenu {
+                        Button(role: .destructive) {
+                            Task {
+                                try? await albumManager.deletePhoto(fromAlbum: album, photo: photo)
+                                self.photos.removeAll(where: { $0.id == photo.id })
+                            }
+                        } label: {
+                            Label("Delete", systemImage: "trash")
+                        }
+                    }
+                    #endif
                 }
             }
             .padding()
@@ -69,12 +83,12 @@ struct AlbumDetailsView: View {
         .navigationTitle(album.name)
         .fullScreenCover(item: $photoDetailSheetItem, content: { photo in
             if #available(iOS 18.0, *) {
-                PhotoDetailsView(photos: photos, selectedPhoto: photo)
+                PhotoDetailsView(album: album, photos: $photos, selectedPhoto: photo)
 #if !SKIP
                     .navigationTransition(.zoom(sourceID: photo.id, in: namespace))
 #endif
             } else {
-                PhotoDetailsView(photos: photos, selectedPhoto: photo)
+                PhotoDetailsView(album: album, photos: $photos, selectedPhoto: photo)
             }
         })
         .toolbar(content: {
