@@ -4,8 +4,6 @@ import SkipKit
 struct AlbumDetailsView: View {
     let album: Album
     @EnvironmentObject var albumManager: AlbumManager
-//    @State private var selectedItems: [PhotosPickerItem] = [] // Array to store selected images
-    @State private var selectedImages: [UIImage] = [] // Array to store final selected images
     @State private var photos: [Photo] = [] // Array to store final selected images
     @State private var isShowingPhotoPicker = false
     @State private var selectedImageURL: URL?
@@ -76,17 +74,16 @@ struct AlbumDetailsView: View {
         .onChange(of: selectedImageURL) { _, newValue in
             guard let newValue else { return }
             
-            do {
-                defer {
-                    self.selectedImageURL = nil
+            Task {
+                do {
+                    defer {
+                        self.selectedImageURL = nil
+                    }
+                    let photo = try await albumManager.addPhoto(toAlbum: album, imageURL: newValue)
+                    self.photos.append(photo)
+                } catch {
+                    print(error)
                 }
-                let data = try Data(contentsOf: newValue)
-                guard let image = UIImage(data: data) else {
-                    return
-                }
-                selectedImages.append(image)
-            } catch {
-                print(error)
             }
         }
     }

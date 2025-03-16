@@ -9,8 +9,10 @@ import Foundation
 import SwiftUI
 #if SKIP
 import SkipFirebaseFirestore
+import SkipFirebaseStorage
 #else
 import FirebaseFirestore
+import FirebaseStorage
 #endif
 
 struct Photo: Identifiable, Codable, Hashable {
@@ -34,6 +36,7 @@ struct Album: Identifiable, Codable {
 
 final class AlbumManager: ObservableObject {
     private let db = Firestore.firestore()
+    private let storage = Storage.storage().reference()
     private var albumCodes: [String] {
         get {
             (UserDefaults.standard.string(forKey: "albumCodesData") ?? "").components(separatedBy: ",")
@@ -96,11 +99,27 @@ final class AlbumManager: ObservableObject {
         return photos
     }
     
-    func createAlbum(withName name: String) async throws {
+    func createAlbum(withName name: String, startDate: Date, endDate: Date) async throws {
+        let startTimestamp = Timestamp(date: startDate)
+        let endTimestamp = Timestamp(date: endDate)
+        let code = randomString(length: 4)
         
+        try await db.collection("Albums").addDocument(data: ["name": name, "startDate": startTimestamp, "endDate": endTimestamp, "code": code])
+        
+        try await getAlbums()
     }
     
-    func addPhoto(toAlbum: Album, image: UIImage) async throws {
+    func addPhoto(toAlbum album: Album, imageURL: URL) async throws -> Photo {
+        let imageRef = storage.child("images/\(imageURL.lastPathComponent)")
+        let uploadTask = try await imageRef.putFileAsync(from: imageURL)
+        let downloadURL = try await imageRef.downloadURL()
         
+        let documentReference = try await db.collection("Albums").document(album.id).collection("Images").addDocument(data: ["url": downloadURL.absoluteString, "createdAt": Timestamp()])
+        return Photo(id: documentReference.documentID, url: imageURL, createdAt: Date())
     }
+    
+    private func randomString(length: Int) -> String {
+        let letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+        return String((0..<length).map{ _ in letters.randomElement()! })
+      }
 }
