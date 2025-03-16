@@ -10,9 +10,11 @@ import SwiftUI
 #if SKIP
 import SkipFirebaseFirestore
 import SkipFirebaseStorage
+import SkipFirebaseAuth
 #else
 import FirebaseFirestore
 import FirebaseStorage
+import FirebaseAuth
 #endif
 
 struct Photo: Identifiable, Hashable {
@@ -24,6 +26,7 @@ struct Photo: Identifiable, Hashable {
 
 struct Album: Identifiable, Codable {
     let id: String
+    let ownerID: String
     let name: String
     let startDate: Date
     let endDate: Date
@@ -68,6 +71,7 @@ final class AlbumManager: ObservableObject {
         for album in firebaseAlbums.documents {
             guard let name = album.get("name") as? String,
                   let code = album.get("code") as? String,
+                  let ownerID = album.get("ownerID") as? String,
                   let startDate = album.get("startDate") as? Timestamp,
                   let endDate = album.get("endDate") as? Timestamp
             else {
@@ -76,6 +80,7 @@ final class AlbumManager: ObservableObject {
             
             let albumData: Album = .init(
                 id: album.documentID,
+                ownerID: ownerID,
                 name: name,
                 startDate: startDate.dateValue(),
                 endDate: endDate.dateValue(),
@@ -120,12 +125,12 @@ final class AlbumManager: ObservableObject {
         return photos
     }
     
-    func createAlbum(withName name: String, startDate: Date, endDate: Date, thumbnail: URL?) async throws {
+    func createAlbum(withName name: String, startDate: Date, endDate: Date, thumbnail: URL?, for user: User) async throws {
         let albumId = UUID().uuidString
         let startTimestamp = Timestamp(date: startDate)
         let endTimestamp = Timestamp(date: endDate)
         let code = randomString(length: 4)
-        var data: [String: Any] = ["name": name, "startDate": startTimestamp, "endDate": endTimestamp, "code": code]
+        var data: [String: Any] = ["name": name, "ownerID": user.uid, "startDate": startTimestamp, "endDate": endTimestamp, "code": code]
         
         if let thumbnail {
             let imageRef = storage.child("images/\(albumId)/thumbnail.\(thumbnail.pathExtension)")
@@ -158,7 +163,11 @@ final class AlbumManager: ObservableObject {
         return Photo(id: photoId, url: imageURL, image: UIImage(data: (try? Data(contentsOf: imageURL)) ?? Data()), createdAt: Date())
     }
     
-    func deletePhoto(fromAlbum album: Album, photo: Photo) async throws {
+    func deletePhoto(fromAlbum album: Album, photo: Photo, for user: User) async throws {
+        guard album.ownerID == user.uid else {
+            return
+        }
+        
         try await db.collection("Albums").document(album.id).collection("Images").document(photo.id).delete()
         let imageRef = storage.child("images/\(album.id)/\(photo.id).\(photo.url.pathExtension)")
         try await imageRef.delete()
