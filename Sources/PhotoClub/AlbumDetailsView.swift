@@ -77,12 +77,38 @@ struct AlbumDetailsView: View {
                 PhotoDetailsView(photos: photos, selectedPhoto: photo)
             }
         })
+        .toolbar(content: {
+            ToolbarItem(placement: .topBarTrailing) {
+                HStack{
+                    Text(album.code)
+                    CopyButton(text: album.code)
+                        .buttonStyle(.bordered)
+                }
+            }
+        })
         .refreshable {
-            self.photos.removeAll()
-            await fetchPhotos()
+            do {
+                self.isShowingPhotosLoadingIndicator = true
+                defer {
+                    self.isShowingPhotosLoadingIndicator = false
+                }
+                self.photos = try await albumManager.getPhotos(for: album)
+            } catch {
+                print(error)
+            }
         }
         .task {
-            await fetchPhotos()
+            do {
+                self.isShowingPhotosLoadingIndicator = true
+                defer {
+                    self.isShowingPhotosLoadingIndicator = false
+                }
+                try await albumManager.getPhotos(for: album) { photo in
+                    self.photos.append(photo)
+                }
+            } catch {
+                print(error)
+            }
         }
 //        .background(Color.logoBackground.ignoresSafeArea())
 //        .padding(.top, -30)  // Removed extra padding at the top of the screen
@@ -108,21 +134,6 @@ struct AlbumDetailsView: View {
                     print(error)
                 }
             }
-        }
-    }
-    
-    func fetchPhotos() async {
-        do {
-            self.isShowingPhotosLoadingIndicator = true
-            defer {
-                self.isShowingPhotosLoadingIndicator = false
-                
-            }
-            try await albumManager.getPhotos(for: album) { photo in
-                self.photos.append(photo)
-            }
-        } catch {
-            print(error)
         }
     }
     
