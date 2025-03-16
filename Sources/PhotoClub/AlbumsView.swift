@@ -45,6 +45,7 @@ struct AlbumsView: View {
         }
         .sheet(isPresented: $isShowingJoinCreateAlbumSheet, content: {
             JoinCreateAlbumView()
+                .presentationDetents([.fraction(0.7), .large])
         })
         .tint(Color.actionColor)
         .task {
