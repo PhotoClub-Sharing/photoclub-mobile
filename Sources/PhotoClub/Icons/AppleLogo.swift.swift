@@ -8,7 +8,12 @@
 import Foundation
 import SwiftUI
 
-struct AppleLogo: View {
+protocol SVGIcon: View {
+    var isResizable: Bool { get }
+    func resizable() -> Self
+}
+
+struct AppleLogo: SVGIcon {
 
   static let intrinsicSize = CGSize(width: 814, height: 1000)
 
@@ -86,7 +91,7 @@ struct AppleLogo: View {
 
     var body: some View {
       PathShape1()
-            .fill(.white)
+            .fill(.tint)
     }
   }
 

@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct GoogleLogo: View {
+struct GoogleLogo: SVGIcon {
 
   static let intrinsicSize = CGSize(width: 800, height: 800)
   static let viewBox = CGRect(x: 0.0, y: 0.0, width: 210, height: 210)
@@ -55,7 +55,7 @@ struct GoogleLogo: View {
 
     var body: some View {
       PathShape1()
-            .fill(.white)
+            .fill(.tint)
     }
   }
 

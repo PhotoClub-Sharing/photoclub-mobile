@@ -18,14 +18,7 @@ public struct ContentView: View {
                 Button {
                     
                 } label: {
-                    Label {
-                        Text("Continue with Apple")
-                    } icon: {
-                        AppleLogo()
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: 25, height: 25)
-                    }
+                    SVGLabel("Continue with Apple", tintColor: .white, icon: AppleLogo())
                     .frame(maxWidth: .infinity)
                 }
                 .tint(Color.actionColor)
@@ -33,14 +26,7 @@ public struct ContentView: View {
                 Button {
                     
                 } label: {
-                    Label {
-                        Text("Continue with Google")
-                    } icon: {
-                        GoogleLogo()
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: 25, height: 25)
-                    }
+                    SVGLabel("Continue with Google", tintColor: .white, icon: GoogleLogo())
                     .frame(maxWidth: .infinity)
                 }
                 .tint(Color.actionColor)

@@ -34,20 +34,13 @@ struct AlbumsView: View {
                 Button {
                     albumManager.addAlbum(code: "hello")
                 } label: {
-                    Label {
-                        Text("Add Album")
-                    } icon: {
-                        Image("plus.circle", bundle: .module)
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: 25, height: 25)
-                            .tint(Color.actionColor)
-                    }
-
+                    Label("Add Album", systemImage: "plus.circle")
+                        .labelStyle(.iconOnly)
                 }
                 .foregroundStyle(Color.actionColor)
             }
         }
+        .tint(Color.actionColor)
         .task {
             try? await albumManager.getAlbums()
         }
