@@ -261,7 +261,6 @@
 
     },
     "Settings" : {
-      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -290,6 +289,9 @@
       }
     },
     "Sign In" : {
+
+    },
+    "Sign Out" : {
 
     },
     "Sign Up" : {

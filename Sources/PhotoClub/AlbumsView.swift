@@ -10,6 +10,7 @@ import SwiftUI
 struct AlbumsView: View {
     @EnvironmentObject var albumManager: AlbumManager
     @State var isShowingJoinCreateAlbumSheet: Bool = false
+    @State var isShowingSettingsSheet: Bool = false
     
     var body: some View {
         NavigationStack {
@@ -34,18 +35,32 @@ struct AlbumsView: View {
 //            .background(Color.logoBackground.ignoresSafeArea())
             .navigationTitle("Albums")
             .toolbar {
-                Button {
-                    isShowingJoinCreateAlbumSheet = true
-                } label: {
-                    Label("Add Album", systemImage: "plus.circle")
-                        .labelStyle(.iconOnly)
+                ToolbarItem(placement: .topBarLeading) {
+                    Button {
+                        isShowingSettingsSheet = true
+                    } label: {
+                        Label("Settings", systemImage: "gear")
+                            .labelStyle(.iconOnly)
+                    }
+                    .foregroundStyle(Color.actionColor)
                 }
-                .foregroundStyle(Color.actionColor)
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        isShowingJoinCreateAlbumSheet = true
+                    } label: {
+                        Label("Add Album", systemImage: "plus.circle")
+                            .labelStyle(.iconOnly)
+                    }
+                    .foregroundStyle(Color.actionColor)
+                }
             }
         }
         .sheet(isPresented: $isShowingJoinCreateAlbumSheet, content: {
             JoinCreateAlbumView()
                 .presentationDetents([.fraction(0.7), .large])
+        })
+        .sheet(isPresented: $isShowingSettingsSheet, content: {
+            SettingsView()
         })
         .tint(Color.actionColor)
         .task {

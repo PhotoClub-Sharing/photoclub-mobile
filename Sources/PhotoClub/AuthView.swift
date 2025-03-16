@@ -19,6 +19,7 @@ public struct AuthView: View {
             VStack {
                 TextField("Email", text: $email)
                     .textFieldStyle(.roundedBorder)
+                    .keyboardType(.emailAddress)
                 SecureField("Password", text: $password)
                     .textFieldStyle(.roundedBorder)
                 
@@ -41,6 +42,7 @@ public struct AuthView: View {
                             .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.borderedProminent)
+                    .tint(.actionColor)
                     .disabled(password2 != password || email.isEmpty || password.isEmpty)
                     
                     Button {
@@ -50,6 +52,7 @@ public struct AuthView: View {
                             .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.bordered)
+                    .tint(.actionColor)
                 } else {
                     Button {
                         Task {
@@ -60,21 +63,27 @@ public struct AuthView: View {
                             .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.borderedProminent)
+                    .tint(.actionColor)
                     .disabled(email.isEmpty || password.isEmpty)
                     
                     Button {
-                        isSigningUp = false
+                        isSigningUp = true
                     } label: {
                         Text("Don't have an account? Sign Up")
                             .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.bordered)
+                    .tint(.actionColor)
+                    
                 }
                 
-                Button("Continue as Guest") {
+                Button {
                     Task {
                         try? await authManager.signInAnnonymously()
                     }
+                } label: {
+                    Text("Continue as Guest")
+                        .frame(maxWidth: .infinity)
                 }
                     .foregroundStyle(Color.primary)
             }
@@ -85,6 +94,7 @@ public struct AuthView: View {
                     .fill(Color.white)
             )
         }
+        .animation(.default, value: isSigningUp)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .ignoresSafeArea(edges: .bottom)
         .background(Color.logoBackground.ignoresSafeArea())

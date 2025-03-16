@@ -15,9 +15,19 @@ import FirebaseAuth
 
 final class AuthManager: ObservableObject {
     @Published private var auth = Auth.auth()
-    var currentUser: User? {
-        auth.currentUser
+    private var listener: (any NSObjectProtocol)?
+    @Published private(set) var currentUser: User? = Auth.auth().currentUser
+    
+    init() {
+        startListener()
     }
+    
+    private func startListener() {
+        _ = auth.addStateDidChangeListener({ _, user in
+            self.currentUser = user
+        })
+    }
+    
     var isAuthenticated: Bool {
         currentUser != nil
     }
