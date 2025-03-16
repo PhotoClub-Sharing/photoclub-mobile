@@ -9,12 +9,24 @@ import SwiftUI
 
 struct PhotoDetailsView: View {
     let album: Album
+    let namespace: Namespace.ID?
     @Binding var photos: [Photo]
     @State var selectedPhoto: Photo
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var albumManager: AlbumManager
     
     var body: some View {
+        if #available(iOS 18.0, *), let namespace {
+            _body
+#if !SKIP
+                .navigationTransition(.zoom(sourceID: selectedPhoto.id, in: namespace))
+#endif
+        } else {
+            _body
+        }
+    }
+    
+    var _body: some View {
         TabView(selection: $selectedPhoto) {
             ForEach(photos) { photo in
                 Group {
@@ -38,6 +50,7 @@ struct PhotoDetailsView: View {
                 #endif
             }
         }
+        .ignoresSafeArea(edges: .bottom)
         #if !SKIP
         .indexViewStyle(PageIndexViewStyle(backgroundDisplayMode: .always))
         #endif

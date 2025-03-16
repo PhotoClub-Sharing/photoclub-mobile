@@ -82,14 +82,11 @@ struct AlbumDetailsView: View {
         #endif
         .navigationTitle(album.name)
         .fullScreenCover(item: $photoDetailSheetItem, content: { photo in
-            if #available(iOS 18.0, *) {
-                PhotoDetailsView(album: album, photos: $photos, selectedPhoto: photo)
-#if !SKIP
-                    .navigationTransition(.zoom(sourceID: photo.id, in: namespace))
-#endif
-            } else {
-                PhotoDetailsView(album: album, photos: $photos, selectedPhoto: photo)
-            }
+            #if !SKIP
+            PhotoDetailsView(album: album, namespace: namespace, photos: $photos, selectedPhoto: photo)
+            #else
+            PhotoDetailsView(album: album, namespace: nil, photos: $photos, selectedPhoto: photo)
+            #endif
         })
         .toolbar(content: {
             ToolbarItem(placement: .topBarTrailing) {
