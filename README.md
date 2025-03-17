@@ -6,3 +6,5 @@ Instead of using ReactNative or Flutter, we decided to make it native on both iO
 
 ## Demo
 https://hc-cdn.hel1.your-objectstorage.com/s/v3/0fbddfa0da5a0c04426406ee036304da10c32baf_photoclub_demo.mp4
+
+[Download It](https://github.com/PhotoClub-Sharing/photoclub-mobile/releases)
